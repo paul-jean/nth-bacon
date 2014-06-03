@@ -18,7 +18,4 @@ var actorGraph = {
 // build shortest paths to node 3:
 var shortestPaths = new ShortestPaths(actorGraph, 3);
 // retrieve the shortest path from node 1:
-var pathTo1 = shortestPaths.pathTo(1);
-
-console.log("path 1 -> 3:");
-console.log(pathTo1);
+shortestPaths.printPathTo(1);

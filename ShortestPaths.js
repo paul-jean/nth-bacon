@@ -31,12 +31,12 @@ var ShortestPaths = function(actorGraph, baconID) {
   this.marked[this.baconID] = true;
 
   while(q.length > 0) {
-    console.log("q = " + q);
+    // console.log("q = " + q);
     var markedKeys = [];
     for (var k in this.marked) markedKeys.push(k);
-    console.log("marked = " + markedKeys);
-    console.log("edgeTo = ");
-    console.log(this.edgeTo);
+    // console.log("marked = " + markedKeys);
+    // console.log("edgeTo = ");
+    // console.log(this.edgeTo);
     var actorID = q.shift();
     var adjacentActors = actorGraph[actorID];
 
@@ -68,14 +68,18 @@ ShortestPaths.prototype = {
       edge = this.edgeTo[id];
       id = edge.actorID;
     }
-    /*
-    for (var actor = this.edgeTo[actorID]; actor.actorID != this.baconID; actor = this.edgeTo[actor.actorID]) {
-      console.log("actorID: " + actor.actorID + ", movieID: "+ actor.movieID);
-      path.push(actor);
-    }
-    path.push({actorID: this.baconID, movieID: null});
-    */
     path.push({edge: edge, id: this.baconID});
     return path;
+  },
+
+  printPathTo: function(actorID) {
+    var path = this.pathTo(actorID);
+    var pathString = "";
+    path.forEach(function(e) {
+      if(e.edge) pathString += " -(" + e.edge.movieID + ")-> ";
+      pathString += e.id; // TODO translate id to actor name
+    });
+    console.log(pathString);
   }
+  
 };
