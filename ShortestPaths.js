@@ -61,12 +61,21 @@ ShortestPaths.prototype = {
   pathTo: function(actorID) {
     if (!this.hasPathTo(actorID)) { return null; }
     var path = [];
-    var startNode = {actorID: actorID, movieID: null};
-    for (var actor = startNode; actor.actorID != this.baconID; actor = this.edgeTo[actor.actorID]) {
+    var id = actorID;
+    var edge = null;
+    while (id != this.baconID) {
+      path.push({edge: edge, id: id});
+      edge = this.edgeTo[id];
+      id = edge.actorID;
+    }
+    /*
+    for (var actor = this.edgeTo[actorID]; actor.actorID != this.baconID; actor = this.edgeTo[actor.actorID]) {
       console.log("actorID: " + actor.actorID + ", movieID: "+ actor.movieID);
       path.push(actor);
     }
     path.push({actorID: this.baconID, movieID: null});
+    */
+    path.push({edge: edge, id: this.baconID});
     return path;
   }
 };
