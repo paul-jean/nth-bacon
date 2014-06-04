@@ -27,6 +27,17 @@ var ActorGraph = function(dirName) {
       for (var k = 0; k < cast.length; k ++) {
         var costar = cast[k];
         if (costar != actor) {
+          // TODO: actor A and actor B can appear in multiple movies together
+          // but this treats each costar connection as unique
+          // Can this be handled in the adjacency list representation for the graph?
+          if (this.graph[actor][costar]) {
+            // found a multiple movies for actor and costar
+            /*
+            console.log('Actors ' + actor + ' and ' + costar + ' are in multiple movies:');
+            console.log(this.graph[actor][costar]);
+            console.log(movieName);
+            */
+          }
           this.graph[actor][costar] = movieName;
         }
       }
