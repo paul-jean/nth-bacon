@@ -74,6 +74,7 @@ ShortestPaths.prototype = {
 
   printPathTo: function(actorID) {
     var path = this.pathTo(actorID);
+    if (!path) return null;
     var pathString = "";
     path.forEach(function(e) {
       if(e.edge) pathString += " -(" + e.edge.movieID + ")-> ";
@@ -81,5 +82,5 @@ ShortestPaths.prototype = {
     });
     console.log(pathString);
   }
-  
+
 };

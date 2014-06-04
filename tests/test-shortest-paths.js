@@ -7,7 +7,7 @@ var testPath = function(graph, source, dest, expectedPathIDs) {
   console.log(graph);
 
   // build shortest paths to source node:
-  var shortestPaths = new ShortestPaths(graph, source);
+  var shortestPaths = ShortestPaths(graph, source);
   // retrieve the shortest path from destination node:
   var pathTo1 = shortestPaths.pathTo(dest);
   var ids = [];
@@ -49,3 +49,5 @@ actorGraph2 = {
 };
 
 testPath(actorGraph2, 0, 3, [3, 2, 0]);
+
+testPath(actorGraph2, 0, 4, [4, 2, 0]);
