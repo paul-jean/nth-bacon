@@ -1,9 +1,24 @@
 var ActorGraph = require('./ActorGraph');
 var ShortestPaths = require('./ShortestPaths');
 
+console.log('Building costar graph ... ');
 var actorGraph = ActorGraph('./films');
-console.log(actorGraph);
-var shortestPaths = ShortestPaths(actorGraph, 'Kevin Bacon');
+// console.log(actorGraph);
+console.log('Constructing shortest paths to Kevin Bacon ... ');
+var shortestPaths = ShortestPaths(actorGraph.graph, 'Kevin Bacon');
 
-shortestPaths.printPathTo('Johnny Depp');
+// console.log('Path from Johnny Depp:');
+// shortestPaths.printPathTo('Johnny Depp');
 
+var readline = require('readline');
+
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+rl.question("Type the name of an actor or actress, e.g. Johnny Depp",
+            function(actor) {
+              shortestPaths.printPathTo(actor);
+              rl.close();
+            });

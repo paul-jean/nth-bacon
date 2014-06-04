@@ -27,7 +27,7 @@ var ShortestPaths = function(actorGraph, baconID) {
   this.baconID = baconID; // Kevin Bacon's actor ID
 
   var q = [];
-  q.push(baconID);
+  q.push(this.baconID);
   this.marked[this.baconID] = true;
 
   while(q.length > 0) {
