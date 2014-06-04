@@ -17,8 +17,12 @@ var rl = readline.createInterface({
   output: process.stdout
 });
 
-rl.question("Type the name of an actor or actress, e.g. Johnny Depp",
-            function(actor) {
-              shortestPaths.printPathTo(actor);
-              rl.close();
-            });
+var query = function () {
+  rl.question(
+    "Type the name of an actor or actress, e.g. Johnny Depp:\n\n",
+    function(actor) {
+      console.log('Shortest path to ' + actor + ':');
+      shortestPaths.printPathTo(actor);
+      query();
+    });
+};
