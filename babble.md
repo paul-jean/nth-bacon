@@ -68,7 +68,7 @@ who was in `"Diner"` with `Kevin Bacon`.
 The [wikipedia](http://en.wikipedia.org/wiki/Six_Degrees_of_Kevin_Bacon) article says:
 "According to the Oracle of Bacon website, approximately 12% of all actors cannot be linked to Bacon"
 
-There are 54K unique actors in the database:
+There are 26K unique actors in the database:
 
 ```bash
 [rule146@rule146: films]$ pwd
@@ -86,55 +86,19 @@ There are 54K unique actors in the database:
 10033.json
 10034.json
 
-[rule146@rule146: films]$ find . -name '*.json' | xargs -n 1 -I {} tail +6 {} | grep name | awk 'BEGIN {FS=":"} {print $2}' | uniq | head
- "Joaquin Phoenix",
- "Rick Moranis",
- "Jeremy Suarez",
- "Joan Copeland",
- "Michael Clarke Duncan",
- "Harold Gould",
- "Jason Raize",
- "Paul Christie",
- "Danny Mastrogiorgio",
- "Dave Thomas",
+[rule146@rule146: nth-bacon]$ find . -name '*.json' | xargs -n 1 -I {} tail +6 {} | grep name | awk 'BEGIN {FS=":"} {print $2}' | sort | uniq | head
 
-[rule146@rule146: films]$ find . -name '*.json' | xargs -n 1 -I {} tail +6 {} | grep name | awk 'BEGIN {FS=":"} {print $2}' | uniq | wc -l
-   53636
+ " Anne-Sophie Franck",
+ " Anthony Palliser"
+ " Barnaby Southcombe"
+ " Cynthia Fleury"
+ " Frederick Seidel"
+ " Jessica Collins",
+ " Joe Cortese",
+ " Josie Bissett",
+ " Joy Fleury "
+
+[rule146@rule146: nth-bacon]$ find . -name '*.json' | xargs -n 1 -I {} tail +6 {} | grep name | awk 'BEGIN {FS=":"} {print $2}' | sort | uniq | wc -l
+   26174
 ```
-
-Why the critical slowdown? The queue is growing monotonically:
-
-```bash
-^C[rule146@rule146: nth-bacon]$ node nthbacon.js
-Building costar graph ...
-Constructing shortest paths to Kevin Bacon ...
-1000 keys marked
-queue length = 995
-2000 keys marked
-queue length = 1972
-3000 keys marked
-queue length = 2956
-4000 keys marked
-queue length = 3944
-5000 keys marked
-queue length = 4883
-6000 keys marked
-queue length = 5848
-7000 keys marked
-queue length = 6823
-8000 keys marked
-queue length = 7775
-9000 keys marked
-queue length = 8730
-10000 keys marked
-queue length = 9691
-11000 keys marked
-queue length = 10636
-12000 keys marked
-queue length = 11599
-13000 keys marked
-queue length = 12527
-...
-```
-Turns out the queue grows until the end and then shrinks very suddenly. So this seems to be fine behavior.
 
