@@ -1,9 +1,10 @@
 var ShortestPaths = require('../ShortestPaths.js');
+var ActorGraph = require('../ActorGraph');
 var assert = require('assert');
 var util = require('util');
 
-var testPath = function(graph, source, dest, expectedPathIDs) {
-  console.log('Test: actor graph =');
+var testSmallGraph = function(graph, source, dest, expectedPathIDs) {
+  console.log('Test graph =');
   console.log(graph);
 
   // build shortest paths to source node:
@@ -35,7 +36,7 @@ var actorGraph = {
   3: {1: '3-1', 2: '3-2'}
 };
 
-testPath(actorGraph, 3, 1, [1, 3]);
+testSmallGraph(actorGraph, 3, 1, [1, 3]);
 
 // example graph from pp 537 of
 // "Algorithms", Sedgewick et al
@@ -48,6 +49,55 @@ actorGraph2 = {
   5: {3: '5-3', 0: '5-0'}
 };
 
-testPath(actorGraph2, 0, 3, [3, 2, 0]);
+testSmallGraph(actorGraph2, 0, 3, [3, 2, 0]);
 
-testPath(actorGraph2, 0, 4, [4, 2, 0]);
+testSmallGraph(actorGraph2, 0, 4, [4, 2, 0]);
+
+var testBaconNumber = function(paths, actor, expectedLength) {
+  console.log('Test graph: actor graph');
+  var path = paths.pathTo(actor);
+  assert.equal(path.length - 1, expectedLength);
+  console.log('Test SUCCEEDED.');
+  console.log(actor + '\'s Bacon number is ' + expectedLength);
+  console.log(util.format('Shortest path from %s to Kevin Bacon =', actor));
+  paths.printPathTo(actor);
+  console.log('\n++++++++++++++++++++++++++++++++++++++\n');
+};
+
+var actorGraph = ActorGraph('../films');
+var shortestPaths = ShortestPaths(actorGraph.graph, 'Kevin Bacon');
+
+testBaconNumber(shortestPaths, 'Kevin Bacon', 0);
+
+console.log('Collecting Bacon numbers frequencies ...');
+var baconNumberLists = {};
+for (var actor in actorGraph.graph) {
+  var baconNumber = shortestPaths.pathTo(actor).length - 1;
+  if (!baconNumberLists[baconNumber]) {
+    baconNumberLists[baconNumber] = [];
+  }
+  baconNumberLists[baconNumber].push(actor);
+}
+
+var baconNumberCounts = {};
+for (var bn in baconNumberLists) {
+  baconNumberCounts[bn] = baconNumberLists[bn].length;
+}
+
+var baconNumbers = [];
+for (var bn in baconNumberCounts) baconNumbers.push(bn);
+
+console.log('Frequencies of Bacon numbers:');
+console.log(baconNumberCounts);
+console.log('\n++++++++++++++++++++++++++++++++++++++\n');
+
+var maxBaconNumber = Math.max.apply(Math, baconNumbers);
+for (var i = 0; i <= maxBaconNumber; i ++) {
+  var randomActorIndex = Math.floor(Math.random() * baconNumberCounts[i]);
+  var actor = baconNumberLists[i][randomActorIndex];
+  console.log('Random actor with a Bacon number of ' + i + ':');
+  console.log(actor);
+  console.log('Shortest path to Kevin Bacon:');
+  shortestPaths.printPathTo(actor);
+  console.log('\n++++++++++++++++++++++++++++++++++++++\n');
+}

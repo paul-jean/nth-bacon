@@ -1,40 +1,43 @@
-module.exports = function(actorGraph, baconID) {
-  return new ShortestPaths(actorGraph, baconID);
+module.exports = function(actorGraph, baconName) {
+  return new ShortestPaths(actorGraph, baconName);
 };
 
 /*
- * ShortestPaths(actorGraph, baconID) finds and stores the shortest paths from Kevin Bacon to all other actors
- * in the given actorGraph.
+ * ShortestPaths(actorGraph, baconName) finds and stores the shortest paths from Kevin Bacon to all other actors
+ * in the given actor graph.
  *
- * @param actorGraph: gives actors (nodes) adjacent to actor A, each with the movie (edge label) they have in common with actor A,
- * using the adjacency list representation:
- * actorGraph[actorID_A] => {actorID_B: movieID_AB, actorID_C: movieID_AC, ... }
+ * Uses breadth-first search to find the shortest paths in the actor graph.
  *
- * @param baconID: Kevin Bacon's actor ID
+ * @param actorGraph: adjacency list giving actors (nodes) adjacent to actor A.
+ * Stored as an associative array, where the key is a costar,
+ * and the value is the movie (edge label) they have in common with actor A:
+ *
+ * actorGraph[actor_A] => {actor_B: movie_AB, actor_C: movie_AC, ... }
+ *
+ * @param baconName: Kevin Bacon's actor Name
 */
 
-var ShortestPaths = function(actorGraph, baconID) {
+var ShortestPaths = function(actorGraph, baconName) {
   this.marked = {};
   this.edgeTo = {};
-  this.baconID = baconID;
+  this.baconName = baconName;
 
+  // Do breadth-first search to populate the edgeTo table.
   var q = [];
-  q.push(this.baconID);
-  this.marked[this.baconID] = true;
-  var markedCount = 1;
+  q.push(this.baconName);
+  this.marked[this.baconName] = true;
 
   while(q.length > 0) {
-    var actorID = q.shift();
-    var adjacentActors = actorGraph[actorID];
+    var actorName = q.shift();
+    var adjacentActors = actorGraph[actorName];
 
-    for (var adjActorID in adjacentActors) {
-      if (!this.marked[adjActorID]) {
-        this.marked[adjActorID] = true;
-        markedCount ++;
-        q.push(adjActorID);
-        this.edgeTo[adjActorID] = {
-          actorID: actorID,
-          movieID: adjacentActors[adjActorID]
+    for (var adjActorName in adjacentActors) {
+      if (!this.marked[adjActorName]) {
+        this.marked[adjActorName] = true;
+        q.push(adjActorName);
+        this.edgeTo[adjActorName] = {
+          actorName: actorName,
+          movieName: adjacentActors[adjActorName]
         };
       }
     }
@@ -42,30 +45,36 @@ var ShortestPaths = function(actorGraph, baconID) {
 };
 
 ShortestPaths.prototype = {
-  hasPathTo: function(actorID) {
-    return this.marked[actorID];
+  hasPathTo: function(actorName) {
+    return this.marked[actorName];
   },
 
-  pathTo: function(actorID) {
-    if (!this.hasPathTo(actorID)) { return null; }
+  /* Reconstruct the path from the given actor to Kevin Bacon.
+   * @param actorName: actor node to start the path.
+  */
+  pathTo: function(actorName) {
+    if (!this.hasPathTo(actorName)) { return null; }
     var path = [];
-    var id = actorID;
+    var id = actorName;
     var edge = null;
-    while (id != this.baconID) {
+    while (id != this.baconName) {
       path.push({edge: edge, id: id});
       edge = this.edgeTo[id];
-      id = edge.actorID;
+      id = edge.actorName;
     }
-    path.push({edge: edge, id: this.baconID});
+    path.push({edge: edge, id: this.baconName});
     return path;
   },
 
-  printPathTo: function(actorID) {
-    var path = this.pathTo(actorID);
+  /* Print the path from the given actor to Kevin Bacon.
+   * @param actorName: actor node to start the path.
+  */
+  printPathTo: function(actorName) {
+    var path = this.pathTo(actorName);
     if (!path) return null;
     var pathString = "";
     path.forEach(function(e) {
-      if(e.edge) pathString += " -(" + e.edge.movieID + ")-> ";
+      if(e.edge) pathString += " -(" + e.edge.movieName + ")-> ";
       pathString += e.id;
     });
     console.log(pathString);

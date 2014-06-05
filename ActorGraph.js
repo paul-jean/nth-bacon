@@ -3,6 +3,24 @@ module.exports = function(dirName) {
 };
 var fs = require('fs');
 
+/*
+ * ActorGraph(dirName): builds an adjacency list giving actors (nodes)
+ * adjacent to other actors in the actor graph.
+ * Stored as an associative array, where the key is an actor name (actor_A):
+ *
+ * actorGraph => {actor_A: {...}, actor_B: {...}, ... }
+ *
+ * ... and the value is another associative array with costars for keys
+ * (actor_B, actor_C, ...), and movies (movie_AB, movie_AC) as values:
+ *
+ * actorGraph[actor_A] => {actor_B: movie_AB, actor_C: movie_AC, ... }
+ *
+ * ... where actor_A and actor_B costar in movie_AB,
+ * actor_A and actor_C costar in movie_AC, etc.
+ *
+ * @param {string} dirName: directory containing JSON data files, one file per film.
+ */
+
 var ActorGraph = function(dirName) {
   var jsonFiles = fs.readdirSync(dirName);
   var numFiles = jsonFiles.length;
