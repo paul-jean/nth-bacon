@@ -68,6 +68,72 @@ who was in `"Diner"` with `Kevin Bacon`.
 The [wikipedia](http://en.wikipedia.org/wiki/Six_Degrees_of_Kevin_Bacon) article says:
 "According to the Oracle of Bacon website, approximately 12% of all actors cannot be linked to Bacon"
 
+There are 54K unique actors in the database:
 
+```bash
+[rule146@rule146: films]$ pwd
+/Users/rule146/Documents/nth-bacon/films
 
+[rule146@rule146: films]$ ls -1 | head
+10009.json
+10010.json
+100122.json
+100196.json
+100241.json
+10025.json
+10027.json
+100329.json
+10033.json
+10034.json
+
+[rule146@rule146: films]$ find . -name '*.json' | xargs -n 1 -I {} tail +6 {} | grep name | awk 'BEGIN {FS=":"} {print $2}' | uniq | head
+ "Joaquin Phoenix",
+ "Rick Moranis",
+ "Jeremy Suarez",
+ "Joan Copeland",
+ "Michael Clarke Duncan",
+ "Harold Gould",
+ "Jason Raize",
+ "Paul Christie",
+ "Danny Mastrogiorgio",
+ "Dave Thomas",
+
+[rule146@rule146: films]$ find . -name '*.json' | xargs -n 1 -I {} tail +6 {} | grep name | awk 'BEGIN {FS=":"} {print $2}' | uniq | wc -l
+   53636
+```
+
+Why the critical slowdown? The queue is growing monotonically:
+
+```bash
+^C[rule146@rule146: nth-bacon]$ node nthbacon.js
+Building costar graph ...
+Constructing shortest paths to Kevin Bacon ...
+1000 keys marked
+queue length = 995
+2000 keys marked
+queue length = 1972
+3000 keys marked
+queue length = 2956
+4000 keys marked
+queue length = 3944
+5000 keys marked
+queue length = 4883
+6000 keys marked
+queue length = 5848
+7000 keys marked
+queue length = 6823
+8000 keys marked
+queue length = 7775
+9000 keys marked
+queue length = 8730
+10000 keys marked
+queue length = 9691
+11000 keys marked
+queue length = 10636
+12000 keys marked
+queue length = 11599
+13000 keys marked
+queue length = 12527
+...
+```
 

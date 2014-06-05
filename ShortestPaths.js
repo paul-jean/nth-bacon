@@ -32,9 +32,7 @@ var ShortestPaths = function(actorGraph, baconID) {
 
   while(q.length > 0) {
     // console.log("q = " + q);
-    var markedKeys = [];
-    for (var k in this.marked) markedKeys.push(k);
-    // console.log("marked = " + markedKeys);
+    // var markedKeys = [];
     // console.log("edgeTo = ");
     // console.log(this.edgeTo);
     var actorID = q.shift();
@@ -48,6 +46,12 @@ var ShortestPaths = function(actorGraph, baconID) {
           actorID: actorID,
           movieID: adjacentActors[adjActorID]
         };
+        var numKeys = 0;
+        for (var k in this.marked) numKeys ++;
+        if (numKeys % 1000 === 0) {
+          console.log(numKeys + " keys marked");
+          console.log('queue length = ' + q.length);
+        }
       }
     }
   }
