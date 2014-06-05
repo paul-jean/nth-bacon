@@ -17,12 +17,31 @@ var rl = readline.createInterface({
   output: process.stdout
 });
 
+var numActors = 0;
+for (var a in actorGraph.graph) numActors ++;
+
 var query = function () {
+  var randomActorNum = Math.floor(Math.random() * numActors);
+  var randomActor;
+  var count = 0;
+  for (var a in actorGraph.graph) {
+    if (count === randomActorNum) {
+      randomActor = a;
+      if (randomActor != 'Kevin Bacon') break;
+    }
+    count ++;
+  }
   rl.question(
-    "Type the name of an actor or actress, e.g. Johnny Depp:\n\n",
+    'Actor name (or hit enter for ' + randomActor + '): ',
     function(actor) {
+      if (actor === '') {
+        actor = randomActor;
+      }
       console.log('Shortest path to ' + actor + ':');
       shortestPaths.printPathTo(actor);
+      console.log('\n\n');
       query();
     });
 };
+
+query();
