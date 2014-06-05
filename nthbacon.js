@@ -32,14 +32,18 @@ var query = function () {
     count ++;
   }
   rl.question(
-    'Actor name (or hit enter for ' + randomActor + '): ',
+    '\nActor name (or hit enter for ' + randomActor + '): ',
     function(actor) {
       if (actor === '') {
         actor = randomActor;
       }
-      console.log('Shortest path to ' + actor + ':');
-      shortestPaths.printPathTo(actor);
-      console.log('\n\n');
+      var path = shortestPaths.pathTo(actor);
+      if (!path) {
+        console.log('There is no path from ' + actor + ' to Kevin Bacon!');
+      } else {
+        console.log('There are ' + (path.length - 1) + ' hops from ' + actor + ' to Kevin Bacon:');
+        shortestPaths.printPathTo(actor);
+      }
       query();
     });
 };
