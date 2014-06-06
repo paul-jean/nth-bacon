@@ -32,20 +32,12 @@ Sandra Francis has a Bacon number of 3:
 Sandra Francis -(Tycus)-> Randy Quaid -(The Adventures of Rocky & Bullwinkle)-> John Goodman -(Death Sentence)-> Kevin Bacon
 ```
 
-
 The costar connections leading from the chosen actor to Kevin Bacon are shown,
 along with the actor's Bacon number (number of graph edges in the shortest path
 from the actor to Kevin Bacon in the costar graph). The connections (graph edges)
 are labeled with the movie the actors were in together.
 
-(Note that you may get different movie names on the connections than those I've
-shown here. In general actors can and do co-star in multiple movies together,
-so any given edge in the costar graph can be a multi-edge. Which edge label gets
-chosen depends on the order in which the movie files are loaded (see Data below).
-The Bacon number depends only on the fact that _there exists_ an edge between two
-actors.)
-
-More examples:
+More examples of shortest paths to Bacon:
 
 ```bash
 Actor name (or hit enter for Michael Moriarty):
@@ -64,6 +56,80 @@ Actor name (or hit enter for Steve Winwood):
 Steve Winwood has a Bacon number of 3:
 Steve Winwood -(Red, White and Blues)-> Jeff Beck -(Twins)-> Kelly Preston -(Death Sentence)-> Kevin Bacon
 ```
+
+
+### The issue of multi-edges
+
+Note that you may get different movie names on the connections than those I've
+shown here. In general actors can and do co-star in multiple movies together,
+so any given edge in the costar graph can be a multi-edge. Which edge label gets
+chosen depends on the order in which the movie files are loaded (see Data below).
+The Bacon number depends only on the fact that _there exists_ an edge between two
+actors.
+
+Get a list of all actors who have costarred with Kevin Bacon in a movie:
+
+```bash
+[rule146@rule146: nth-bacon]$ ack -l "Kevin Bacon" films/*.json | \
+xargs -n 1 -I {} tail +6 {} | grep name | awk 'BEGIN {FS=":"} {print $2}' | \
+sort | uniq | perl -pe 's|.*"(.*)".*|\1|' > kb-costars.txt
+```
+
+Run a search for actors who have been in _more than one_ movie with him (this takes a
+few min):
+
+```bash
+[rule146@rule146: nth-bacon]$ while read actor; do echo "$actor: `ack -l \"Kevin Bacon\" films/*.json | xargs ack -l \"$actor\" | wc -l`"; done < kb-costars.txt | awk 'BEGIN {FS=":"} {if ($2 >= 2) print $1" "$2}'
+Bill Paxton         2
+Brian Grazer         2
+Demi Moore         2
+Ed Harris         2
+Edi Gathegi         2
+Eugene Byrd         2
+Gary Oldman         2
+Gary Sinise         2
+John Candy         2
+Kathleen Quinlan         2
+Kevin Bacon        35
+Kevin Costner         2
+Kiefer Sutherland         2
+Kyra Sedgwick         2
+Marcia Gay Harden         3
+Matt Craven         2
+Oliver Platt         3
+Pruitt Taylor Vince         2
+Steve Martin         2
+Tim Robbins         2
+Tom Hanks         2
+Tommy Lee Jones         2
+Xander Berkeley         2
+```
+
+Each of these actors have a Bacon number of 1, since they costar with Bacon in a movie,
+and each represents a node in the costar graph with a _multi-edge_ to
+Kevin Bacon (with multiplicities of 2 and 3), because they costar with Bacon in
+multiple movies. So the edge chosen to connect these actor nodes to the Bacon node
+in the costar graph is a choice of 2 or 3 movies, and the choice is arbitrary. So
+for example, Oliver Platt is shown connecting to Bacon via "X-Men: First Class":
+
+```bash
+Actor name (or hit enter for Gary Littlejohn): Oliver Platt
+Oliver Platt has a Bacon number of 1:
+Oliver Platt -(X-Men: First Class)-> Kevin Bacon
+```
+
+... but we could have choose to use "Frost/Nixon" or "Flatliners" on that
+edge as well, since Bacon and Platt costarred in those movies too:
+
+```bash
+[rule146@rule146: nth-bacon]$ ack -l "Kevin Bacon" films/*.json | xargs ack -l "Oliver Platt" | xargs head -6 | ack name
+    "name": "Frost/Nixon"
+    "name": "Flatliners"
+    "name": "X-Men: First Class"
+```
+
+But the choice of edge label doesn't effect Oliver Platt's Bacon number. His Bacon
+number is 1 since there exists at least one movie he costarred in with Bacon.
 
 
 ### How it works
