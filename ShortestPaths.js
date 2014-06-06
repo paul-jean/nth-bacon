@@ -8,13 +8,13 @@ module.exports = function(actorGraph, baconName) {
  *
  * Uses breadth-first search to find the shortest paths in the actor graph.
  *
- * @param actorGraph: adjacency list giving actors (nodes) adjacent to actor A.
+ * @param {object} actorGraph: adjacency list giving actors (nodes) adjacent to actor A.
  * Stored as an associative array, where the key is a costar,
  * and the value is the movie (edge label) they have in common with actor A:
  *
  * actorGraph[actor_A] => {actor_B: movie_AB, actor_C: movie_AC, ... }
  *
- * @param baconName: Kevin Bacon's actor Name
+ * @param {string} baconName: Kevin Bacon's actor Name
 */
 
 var ShortestPaths = function(actorGraph, baconName) {
