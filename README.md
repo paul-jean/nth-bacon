@@ -4,7 +4,7 @@ This node.js app generates an actor costar graph from
 a movie database, and computes the shortest path from
 any actor to Kevin Bacon using a breadth-first graph search.
 
-## Usage
+### Usage
 
 Run `node nthbacon.js` to initialize the costar graph:
 
@@ -38,6 +38,13 @@ along with the actor's Bacon number (number of graph edges in the shortest path
 from the actor to Kevin Bacon in the costar graph). The connections (graph edges)
 are labeled with the movie the actors were in together.
 
+(Note that you may get different movie names on the connections than those I've
+shown here. In general actors can and do co-star in multiple movies together,
+so any given edge in the costar graph can be a multi-edge. Which edge label gets
+chosen depends on the order in which the movie files are loaded (see Data below).
+The Bacon number depends only on the fact that _there exists_ an edge between two
+actors.)
+
 More examples:
 
 ```bash
@@ -58,12 +65,13 @@ Steve Winwood has a Bacon number of 3:
 Steve Winwood -(Red, White and Blues)-> Jeff Beck -(Twins)-> Kelly Preston -(Death Sentence)-> Kevin Bacon
 ```
 
-## How it works
+
+### How it works
 
 The app uses breadth-first search (BFS) in the costar graph to build up
 a data structure representing the shortest path from the given actor to Kevin Bacon.
 
-## Data
+### Data
 
 The films used to construct the graph are in the `films` directory. There is
 one JSON-formatted file per film:
@@ -85,7 +93,44 @@ one JSON-formatted file per film:
 10034.json
 ```
 
-## Test suite
+We can use the files directly to confirm the shortest path from Johnny Depp
+to Kevin Bacon:
+
+```bash
+Actor name (or hit enter for Michael Maloney): Johnny Depp
+Johnny Depp has a Bacon number of 2:
+Johnny Depp -(Alice in Wonderland)-> Michael Sheen -(Frost/Nixon)-> Kevin Bacon
+```
+
+First, confirm that Johnny Depp was in "Alice in Wonderland" with Michael Sheen:
+
+```bash
+[rule146@rule146: nth-bacon]$ cd films/
+[rule146@rule146: films]$ ack "Alice in Wonderland"
+12155.json
+4:    "name": "Alice in Wonderland"
+[rule146@rule146: films]$ ack "Johnny Depp" 12155.json
+      "name": "Johnny Depp",
+[rule146@rule146: films]$ ack "Michael Sheen" 12155.json
+      "name": "Michael Sheen",
+```
+
+Yep. Next, confirm Michael Sheen was in "Frost/Nixon" with Kevin Bacon:
+
+```bash
+[rule146@rule146: films]$ ack "Frost/Nixon"
+11499.json
+4:    "name": "Frost/Nixon"
+[rule146@rule146: films]$ ack "Michael Sheen" 11499.json
+      "name": "Michael Sheen",
+[rule146@rule146: films]$ ack "Kevin Bacon" 11499.json
+      "name": "Kevin Bacon",
+```
+
+Yes. So this is a valid path through the costar graph. (It's harder to confirm that
+this is the _shortest_ such path by grepping through the files in this way.)
+
+### Test suite
 
 There is a test suite in the `tests` directory. It tests some custom graphs
 in addition to finding actors with a range of different Bacon numbers.
