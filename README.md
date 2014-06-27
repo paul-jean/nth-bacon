@@ -4,7 +4,30 @@ This node.js app generates an actor costar graph from
 a movie database, and computes the shortest path from
 any actor to Kevin Bacon using a breadth-first graph search.
 
-### Usage
+### Web front-end client usage
+
+Start the node.js web server provided in the `server` directory:
+
+```bash
+[rule146@rule146: nth-bacon]$ cd server/
+[rule146@rule146: server]$ node index.js
+Building costar graph ...
+Constructing shortest paths to Kevin Bacon from 26027 actors ...
+Server has started.
+```
+
+(The server runs on `localhost` port 8888.)
+
+Open the `index.html` file in a browser. You should see a simple input field
+prompting you to enter the name of an actor:
+
+![Web front end for shortest path to Kevin Bacon](images/web-front-end-blank.png "Web front end for shortest path to Kevin Bacon")
+
+Enter a valid actor name to get the shortest path to Kevin Bacon through the actor graph:
+
+![Web front end for shortest path to Kevin Bacon](images/web-front-end-filled.png "Web front end for shortest path to Kevin Bacon")
+
+### Command-line client usage
 
 Run `node nthbacon.js` to initialize the costar graph:
 
