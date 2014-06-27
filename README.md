@@ -26,6 +26,8 @@ prompting you to enter the name of an actor:
 Enter a valid actor name to get the shortest path to Kevin Bacon through the actor graph:
 
 ![Web front end for shortest path to Kevin Bacon](images/web-front-end-filled.png "Web front end for shortest path to Kevin Bacon")
+![Web front end for shortest path to Kevin Bacon](images/web-front-end-eg-2.png "Web front end for shortest path to Kevin Bacon")
+![Web front end for shortest path to Kevin Bacon](images/web-front-end-eg-3.png "Web front end for shortest path to Kevin Bacon")
 
 ### Command-line client usage
 
