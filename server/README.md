@@ -4,6 +4,8 @@ Start the server:
 
 ```bash
 [rule146@rule146: server]$ node index.js
+Building costar graph ...
+Constructing shortest paths to Kevin Bacon from 26027 actors ...
 Server has started.
 ```
 
