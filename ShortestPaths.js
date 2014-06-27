@@ -66,10 +66,10 @@ ShortestPaths.prototype = {
     return path;
   },
 
-  /* Print the path from the given actor to Kevin Bacon.
+  /* Return a string representing the path from the given actor to Kevin Bacon.
    * @param actorName: actor node to start the path.
   */
-  printPathTo: function(actorName) {
+  pathString: function(actorName) {
     var path = this.pathTo(actorName);
     if (!path) return null;
     var pathString = "";
@@ -77,6 +77,14 @@ ShortestPaths.prototype = {
       if(e.edge) pathString += " -(" + e.edge.movieName + ")-> ";
       pathString += e.id;
     });
+    return pathString;
+  },
+
+  /* Print the path from the given actor to Kevin Bacon.
+   * @param actorName: actor node to start the path.
+  */
+  printPathTo: function(actorName) {
+    var pathString = this.pathString(actorName);
     console.log(pathString);
   }
 
